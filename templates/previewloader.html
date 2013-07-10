@@ -60,7 +60,7 @@
        *  type: overwrite  -  replace the content in its entirety
        *                      with a new iframe, with the new content.
        */
-      window.addEventListener("message", function(data) {
+      window.addEventListener("message", function(event) {
         try {
           data = JSON.parse(event.data);
           // currently we only support "overwrite",
@@ -71,13 +71,13 @@
             if ("sourceCode" in data && typeof data.sourceCode === "string") {
               content[data.type](data.sourceCode);
             } else {
-              console.error("preview payload had no associated, valid sourceCode", data);
+              console.error("preview payload had no associated, valid sourceCode", event.data);
             }
           } else {
-            console.error("preview payload had no associated instruction type", data);
+            console.error("preview payload had no associated instruction type", event.data);
           }
         } catch (e) {
-          console.error("JSON.parse failed for preview payload", e);
+          console.error("JSON.parse failed for preview payload", event.data);
         }
       });
     </script>
