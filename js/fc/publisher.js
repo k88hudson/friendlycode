@@ -4,8 +4,9 @@
 // to save and load published code.
 define(["jquery"], function($) {
   var myOrigin = window.location.protocol + "//" + window.location.host;
-  
+
   function Publisher(baseURL) {
+    debugger;
     // We want to support CORS for development but in production it doesn't
     // matter because all requests will be same-origin. However, browsers
     // that don't support CORS will barf if they're given absolute URLs to
@@ -47,6 +48,7 @@ define(["jquery"], function($) {
             cb(data);
           },
           success: function(data) {
+            console.log(data);
             cb(null, {path: data, url: baseURL + data});
           }
         });

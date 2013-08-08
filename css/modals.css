@@ -273,7 +273,7 @@ html.deployment-type-development .confirm-dialog .development-note {
 
 .confirmation-button.yes-button {
   background-image: url("../img/yes.png");
-} 
+}
 
 .confirmation-button.no-button {
   background-image: url("../img/no.png");
@@ -304,4 +304,68 @@ html.deployment-type-development .confirm-dialog .development-note {
   background-image: url(../img/throbber.gif);
   background-repeat: no-repeat;
   background-position: 50% 50%;
+}
+
+/*********************************************************
+* Publish Editor
+*/
+.thimble-publish-header {
+  background: #FFF;
+}
+.pre-publish-dialog .thimble-menu-content {
+  position: absolute;
+  top: 0;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.pre-publish-dialog fieldset {
+  border: none;
+}
+.pre-publish-dialog label,
+.pre-publish-dialog input,
+.pre-publish-dialog textarea {
+  font-family: "Open Sans", sans-serif;
+}
+
+.pre-publish-dialog label {
+  display: inline-block;
+  width: 100px;
+  color: #999;
+  font-size: 13px;
+}
+.pre-publish-dialog input,
+.pre-publish-dialog textarea {
+  display: inline-block;
+  width: 230px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  padding: 8px;
+}
+.pre-publish-dialog input:focus,
+.pre-publish-dialog textarea:focus {
+  outline: none;
+  border: 1px solid #3887F3; /* @blue */
+}
+
+.pre-publish-dialog textarea {
+  vertical-align: top;
+  margin-top: -7px;
+  font-size: 13px;
+}
+
+input[name="title"] {
+  font-weight: 700;
+}
+
+input[name="tags"] {
+  color: #3887F3; /* @blue */
+}
+
+input[name="publish"] {
+  background: #3887F3; /* @blue */
+  color: #FFF;
+  width: auto;
+  padding: 8px 16px;
 }

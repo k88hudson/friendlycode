@@ -6,6 +6,7 @@ define(function (require) {
       BackboneEvents = require("backbone-events"),
       SocialMedia = require("./social-media"),
       ConfirmDialogTemplate = require("template!confirm-dialog"),
+      prePublishDialogTemplate = require("template!pre-publish-dialog"),
       PublishDialogTemplate = require("template!publish-dialog");
 
   function makeSharingHotLoader(options) {
@@ -26,12 +27,14 @@ define(function (require) {
   return function(options) {
     var modals = options.modals,
         confirmDialog = $(ConfirmDialogTemplate()),
+        prePublishDialog = $(prePublishDialogTemplate()),
         publishDialog = $(PublishDialogTemplate()),
-        dialogs = confirmDialog.add(publishDialog),
+        dialogs = prePublishDialog.add(confirmDialog.add(publishDialog)),
         codeMirror = options.codeMirror,
         publisher = options.publisher,
         baseRemixURL = options.remixURLTemplate,
         shareResult = $(".share-result", publishDialog),
+        urlInput = $('[name="url"]'), prePublishDialog,
         viewLink = $("a.view", publishDialog),
         remixLink = $("a.remix", publishDialog),
         accordions = $("div.accordion", publishDialog),
@@ -53,7 +56,8 @@ define(function (require) {
       confirmDialog.toggleClass("has-errors", hasErrors);
     });
 
-    var performPublish = function(){
+    var performPublishUI = function(){
+
       // Reset the publish modal.
       shareResult.unbind('.hotLoad');
       $(".accordion", publishDialog).addClass("collapsed");
@@ -76,8 +80,10 @@ define(function (require) {
           var viewURL = info.url;
           var remixURL = baseRemixURL.replace("{{VIEW_URL}}",
                                               escape(info.path));
-          viewLink.attr('href', viewURL).text(viewURL);
-          remixLink.attr('href', remixURL).text(remixURL);
+          //viewLink.attr('href', viewURL).text(viewURL);
+          //remixLink.attr('href', remixURL).text(remixURL);
+          urlInput.val(url);
+          console.log(info);
 
           shareResult.bind('click.hotLoad', makeSharingHotLoader({
             urlToShare: viewURL,
@@ -116,7 +122,32 @@ define(function (require) {
       });
     };
 
-    $(".yes-button", confirmDialog).click(performPublish);
+    function doPublish() {
+       var code = codeMirror.getValue(),
+          publishErrorOccurred = false;
+
+      publisher.saveCode(code, currURL, function(err, info) {
+        if (err) {
+          modals.showErrorDialog({
+            text: i18nBundle['publish-err'] + " " + err.responseText
+          });
+          publishErrorOccurred = true;
+        } else {
+          var viewURL = info.url;
+          var remixURL = baseRemixURL.replace("{{VIEW_URL}}",
+                                              escape(info.path));
+          urlInput.val(viewURL);
+          prePublishDialog.fadeIn();
+
+          currURL = viewURL;
+          self.trigger("publish", {
+            viewURL: viewURL,
+            remixURL: remixURL,
+            path: info.path
+          });
+        }
+      });
+    }
 
     var self = {
       setCurrentURL: function(url) {
@@ -129,11 +160,7 @@ define(function (require) {
           top: bounds.bottom + 'px',
           left: (bounds.right - dialogBoxes.width()) + 'px'
         });
-        if(confirmDialog.hasClass("has-errors")) {
-          confirmDialog.fadeIn();
-        } else {
-          performPublish();
-        }
+        doPublish();
       }
     };
 
