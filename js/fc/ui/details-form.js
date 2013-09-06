@@ -37,7 +37,7 @@ define(['template!details-form'], function (detailsFormHTML) {
 
     // Setup
     $input('tag-input').on('keydown', function (e) {
-      if (e.which === 13 || e.which === 188 || e.which === 9) {
+      if (e.which === 13 || e.which === 188 || e.which === 9 || e.which === 32) {
         e.preventDefault();
         self.addTags(this.value);
       }
